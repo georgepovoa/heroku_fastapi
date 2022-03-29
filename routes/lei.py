@@ -379,3 +379,6 @@ async def create_upload_file(upload_base64:base64upload):
 
 
 
+@app_routes.get("/")
+async def mainpage():
+    return "OK"
