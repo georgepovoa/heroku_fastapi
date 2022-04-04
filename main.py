@@ -4,12 +4,6 @@ from fastapi import FastAPI
 from routes.lei import app_routes 
 from fastapi.middleware.cors import CORSMiddleware
 
-origins = [
-    "http://127.0.0.1:8000",
-    "http://127.0.0.1:8000/lei",
-    "http://127.0.0.1:8000/lei/0",
-    "http://localhost:8000/imagem-cortada"
-]
 
 app = FastAPI()
 

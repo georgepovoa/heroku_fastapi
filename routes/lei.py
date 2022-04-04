@@ -68,7 +68,7 @@ async def create_user(user:str):
 #aqui a gente cria um campo de usuário para salvar as 
 # alterações feitas durante a resolução de questão e etc
     user = user.lower()
-    if alteracoes.find_one({"_id":user}) == {}:
+    if alteracoes.find_one({"_id":user}) == None:
         new_user = {
             "_id": user,
             "questoes_feitas":[],
