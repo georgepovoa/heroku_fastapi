@@ -6,10 +6,8 @@ from io import BytesIO
 from typing import List, Optional
 
 import boto3
-from config.db import alteracoes, cadernos, conn, db_alt, db_cf88, lei, q_cf88
+from config.db import alteracoes, cadernos,lei, q_cf88
 from fastapi import APIRouter, File, Query, UploadFile
-from matplotlib import image
-from models.lei import Alteracoes, Titulo
 from PIL import Image
 from pydantic import BaseModel
 
@@ -35,16 +33,16 @@ async def find_all_titulos():
 @app_routes.get('/lista/{lista_id}',tags = ["lei"])
 # essa função é o começo de receber uma lista de parametros e 
 # retnornar as leis dentro dessa lista  
-async def find_list(item_ids:List[int]=Query([])):
+async def find_lista_lei(lista_de_ids:List[int]=Query([])):
     ids = []
-    for item in lei.find({"_id" : {"$in": item_ids}}):
+    for item in lei.find({"_id" : {"$in": lista_de_ids}}):
         ids.append(item)
     
     return ids
 
 @app_routes.get('/lei/caderno/todos',tags = ["lei"])
 
-async def find_all_titulos():
+async def find_all_tipos_superiores():
     tipos = ["título","capitulo","secao","subsecao"]
     superiores = lei.find({"tipo" : {"$in": tipos}})
 
@@ -52,14 +50,14 @@ async def find_all_titulos():
 
 @app_routes.get('/lei/{item_id}',tags = ["lei"])
 # Essa função retorna a lei de acordo com o id
-# Necessário adicionar um path antes, pq quando existe 
-# typo ele retorna para cá
-async def find_all_titulos(item_id:int):
+
+async def find_in_lei(item_id:int):
     a = lei.find({"_id":item_id})
 
     return list(a)
 
 # APIS RELACIONADAS A LEI
+################################################################################################################################################################################
 
 # API RELACIONADA A USUARIOS
 
@@ -104,6 +102,14 @@ async def get_user(user:str):
     users = alteracoes.find_one({"_id":user})
     
     return users
+
+@app_routes.delete("/user/{user}",tags = ["user"])
+
+async def delete_user(user:str):
+    alteracoes.delete_one({"_id":user})
+
+    return "User deleted"
+
 
 # API RELACIONADA A USUARIOS
 
