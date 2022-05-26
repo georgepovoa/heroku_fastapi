@@ -3,7 +3,7 @@ import json
 import os
 import io
 from io import BytesIO
-from typing import List, Optional
+from typing import List, Optional,Union
 
 import boto3
 from config.db import alteracoes, cadernos,lei, q_cf88
@@ -315,13 +315,20 @@ async def get_questao_individual(user:str,id_lei:int):
 
 
 @app_routes.get("/questoes/cf88/uma",tags = ["Questao"])
-async def read_items(q: Optional[List[int]] = Query([None]),q_c: Optional[List[int]] = Query(None)):
-    print(q)
+# q são as questoes já feitas
+
+async def read_items(q: Union[List[int], None] = Query(default=None),q_c: Union[List[int], None] = Query(default=None)):
+    
     if q == None:
         q = []
+    if q_c == None:
+        q_c = []
     
-    q_com_c = q_cf88.find_one({"$and":[{"_id" : {"$nin": q}},{"id_lei":{"$in":q_c}}]})
+    print(q_c)
+    print(q)
 
+    q_com_c = q_cf88.find_one({"$and":[{"_id" : {"$nin": q}},{"loc_lei":{"$in":q_c}}]})
+    print(q_com_c)
     if q_com_c == None:
         q =  q_cf88.find_one({"_id" : {"$nin": q}})
         print("SEM LEI AGREGADA")
